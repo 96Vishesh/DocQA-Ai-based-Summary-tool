@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: docqa
+
+  # Test Database Configuration
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+
+  # Disable Redis for tests
+  data:
+    redis:
+      repositories:
+        enabled: false
+
+# OpenAI Configuration (mocked in tests)
+openai:
+  api-key: test-api-key
+  model: gpt-4o-mini
+  whisper-model: whisper-1
+
+# Application Configuration
+app:
+  upload-dir: ./test-uploads
+  jwt:
+    secret: dGVzdC1zZWNyZXQta2V5LXRoYXQtaXMtbG9uZy1lbm91Z2gtZm9yLXRlc3Rpbmc=
+    expiration: 86400000

@@ -1,0 +1,65 @@
+<div class="document-view container">
+    @if (loading) {
+    <div class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading document...</p>
+    </div>
+    } @else if (!document) {
+    <div class="error-state">
+        <h2>Document not found</h2>
+        <a routerLink="/" class="btn btn-primary">Back to Dashboard</a>
+    </div>
+    } @else {
+    <header class="document-view-header animate-slide-up">
+        <a routerLink="/" class="back-link">
+            ← <span>Back to Dashboard</span>
+        </a>
+        <div class="document-info">
+            <div class="document-type-icon type-{{ document.type.toLowerCase() }}">
+                {{ getTypeIcon() }}
+            </div>
+            <div>
+                <h1>{{ document.originalFileName }}</h1>
+                <span class="document-type">{{ document.type }} Document</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="document-view-content">
+        <div class="content-main animate-slide-up">
+            @if (isMedia()) {
+            <div class="media-section card">
+                <app-media-player [documentId]="document.id" [type]="$any(document.type)"
+                    (timeUpdate)="onTimeUpdate($event)">
+                </app-media-player>
+            </div>
+            } @else {
+            <div class="summary-section card">
+                <h3>Document Summary</h3>
+                <p>{{ document.summary || 'Summary is being generated...' }}</p>
+            </div>
+            }
+
+            @if (isMedia() && timestamps.length > 0) {
+            <div class="timestamps-section card">
+                <h3>🕐 <span>Timestamps</span></h3>
+                <div class="timestamps-list">
+                    @for (ts of timestamps; track $index) {
+                    <button class="timestamp-item" [class.active]="isActiveTimestamp(ts)"
+                        (click)="seekTo(ts.startTime)">
+                        <span class="timestamp-time">{{ ts.formattedStartTime }}</span>
+                        <span class="timestamp-topic">{{ ts.topic }}</span>
+                    </button>
+                    }
+                </div>
+            </div>
+            }
+        </div>
+
+        <aside class="content-sidebar animate-slide-up">
+            <app-chatbot [documentId]="document.id" (timestampClick)="seekTo($event)">
+            </app-chatbot>
+        </aside>
+    </div>
+    }
+</div>

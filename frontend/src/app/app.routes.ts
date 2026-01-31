@@ -1,0 +1,13 @@
+import { Routes } from '@angular/router';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { DocumentViewComponent } from './pages/document-view/document-view.component';
+import { LoginComponent } from './pages/login/login.component';
+import { RegisterComponent } from './pages/register/register.component';
+
+export const routes: Routes = [
+    { path: '', component: DashboardComponent },
+    { path: 'login', component: LoginComponent },
+    { path: 'register', component: RegisterComponent },
+    { path: 'document/:id', component: DocumentViewComponent },
+    { path: '**', redirectTo: '' }
+];

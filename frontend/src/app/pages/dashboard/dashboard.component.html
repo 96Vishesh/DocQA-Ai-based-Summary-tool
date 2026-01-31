@@ -1,0 +1,66 @@
+<div class="dashboard container">
+    <header class="dashboard-header animate-slide-up">
+        <div>
+            <h1>Document Dashboard</h1>
+            <p>Upload and interact with your documents using AI</p>
+        </div>
+    </header>
+
+    <section class="upload-section animate-slide-up">
+        <app-file-upload (uploadComplete)="onUploadComplete()"></app-file-upload>
+    </section>
+
+    <section class="documents-section animate-slide-up">
+        <h2>Your Documents</h2>
+
+        @if (loading) {
+        <div class="documents-grid">
+            @for (i of [1, 2, 3]; track i) {
+            <div class="document-card skeleton-card">
+                <div class="skeleton" style="width: 48px; height: 48px; border-radius: 12px;"></div>
+                <div class="skeleton" style="width: 70%; height: 20px; margin-top: 16px;"></div>
+                <div class="skeleton" style="width: 40%; height: 14px; margin-top: 8px;"></div>
+            </div>
+            }
+        </div>
+        } @else if (documents.length === 0) {
+        <div class="empty-state">
+            <span class="empty-icon">📄</span>
+            <h3>No documents yet</h3>
+            <p>Upload a PDF, audio, or video file to get started</p>
+        </div>
+        } @else {
+        <div class="documents-grid">
+            @for (doc of documents; track doc.id) {
+            <div class="document-card card">
+                <div class="document-header">
+                    <div class="document-icon type-{{ doc.type.toLowerCase() }}">
+                        {{ getTypeIcon(doc.type) }}
+                    </div>
+                    <span class="badge {{ getStatusClass(doc.status) }}">
+                        {{ doc.status }}
+                    </span>
+                </div>
+                <h3 class="document-name">{{ doc.originalFileName }}</h3>
+                <div class="document-meta">
+                    <span>{{ formatFileSize(doc.fileSize) }}</span>
+                    <span>•</span>
+                    <span>🕐 {{ formatDate(doc.uploadedAt) }}</span>
+                </div>
+                @if (doc.summary) {
+                <p class="document-summary">{{ doc.summary | slice:0:100 }}...</p>
+                }
+                <div class="document-actions">
+                    <a [routerLink]="['/document', doc.id]" class="btn btn-primary">
+                        💬 <span>Chat</span>
+                    </a>
+                    <button class="btn btn-secondary btn-icon" (click)="deleteDocument(doc.id, $event)">
+                        🗑️
+                    </button>
+                </div>
+            </div>
+            }
+        </div>
+        }
+    </section>
+</div>

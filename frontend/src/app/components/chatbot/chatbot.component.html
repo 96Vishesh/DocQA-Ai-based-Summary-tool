@@ -1,0 +1,59 @@
+<div class="chatbot card">
+    <div class="chat-header">
+        <h3>AI Assistant</h3>
+        <p>Ask questions about this document</p>
+    </div>
+
+    <div class="chat-messages" #messagesContainer>
+        @if (messages.length === 0) {
+        <div class="chat-welcome">
+            <p>👋 Hi! I can help you understand this document.</p>
+            <p>Try asking:</p>
+            <ul>
+                <li>"What is this document about?"</li>
+                <li>"Summarize the main points"</li>
+                <li>"When is [topic] discussed?"</li>
+            </ul>
+        </div>
+        } @else {
+        @for (msg of messages; track $index) {
+        <div class="chat-message" [class]="msg.role">
+            <div class="message-content">{{ msg.content }}</div>
+
+            @if (msg.timestamps && msg.timestamps.length > 0) {
+            <div class="message-timestamps">
+                <span class="timestamps-label">🕐 Referenced timestamps:</span>
+                <div class="timestamp-buttons">
+                    @for (ts of msg.timestamps; track $index) {
+                    <button class="timestamp-btn" (click)="onTimestampClick(ts.startTime)">
+                        ▶ {{ formatTime(ts.startTime) }}
+                    </button>
+                    }
+                </div>
+            </div>
+            }
+        </div>
+        }
+        }
+
+        @if (loading) {
+        <div class="chat-message assistant">
+            <div class="message-content loading">
+                <span class="typing-indicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+            </div>
+        </div>
+        }
+    </div>
+
+    <div class="chat-input">
+        <input type="text" [(ngModel)]="input" (keydown)="onKeyDown($event)" placeholder="Ask a question..."
+            [disabled]="loading">
+        <button class="btn btn-primary btn-icon" (click)="sendMessage()" [disabled]="loading || !input.trim()">
+            ➤
+        </button>
+    </div>
+</div>

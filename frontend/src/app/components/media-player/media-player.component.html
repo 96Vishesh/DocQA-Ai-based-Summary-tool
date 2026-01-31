@@ -1,0 +1,15 @@
+<div class="media-player" [class]="type.toLowerCase() + '-player'">
+    @if (type === 'VIDEO') {
+    <video #mediaElement [src]="streamUrl" controls preload="metadata">
+        Your browser does not support video playback.
+    </video>
+    } @else {
+    <div class="audio-visualization">
+        <div class="audio-icon">🎵</div>
+        <p>Audio Player</p>
+    </div>
+    <audio #mediaElement [src]="streamUrl" controls preload="metadata">
+        Your browser does not support audio playback.
+    </audio>
+    }
+</div>
