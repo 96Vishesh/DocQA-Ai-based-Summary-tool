@@ -5,6 +5,7 @@ import com.panscience.docqa.entity.Document;
 import com.panscience.docqa.entity.DocumentContent;
 import com.panscience.docqa.exception.DocumentNotFoundException;
 import com.panscience.docqa.exception.FileStorageException;
+import com.panscience.docqa.repository.ChatMessageRepository;
 import com.panscience.docqa.repository.DocumentContentRepository;
 import com.panscience.docqa.repository.DocumentRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     private final DocumentRepository documentRepository;
     private final DocumentContentRepository documentContentRepository;
+    private final ChatMessageRepository chatMessageRepository;
     private final PdfExtractionService pdfExtractionService;
     private final TranscriptionService transcriptionService;
     private final SummaryService summaryService;
@@ -153,6 +155,8 @@ public class DocumentServiceImpl implements DocumentService {
             log.warn("Failed to delete file: {}", document.getFilePath(), e);
         }
 
+        // Delete chat messages first to avoid foreign key constraint violation
+        chatMessageRepository.deleteByDocumentId(id);
         documentContentRepository.deleteByDocumentId(id);
         documentRepository.delete(document);
     }
