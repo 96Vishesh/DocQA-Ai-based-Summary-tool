@@ -246,5 +246,3 @@ This project is licensed under the MIT License.
 ## Author
 
 Vishesh Srivastava
-
-Created for Panscience Assessment - SDE-1 Programming Assignment
